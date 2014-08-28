@@ -32,7 +32,7 @@ ErrorDocument 404 /404.html
 <IfModule mod_mime.c>
 	AddType audio/mp4                                   m4a f4a f4b
   AddType audio/ogg                                   oga ogg opus
-	AddType application/json                            json map
+  AddType application/json                            json map
   AddType application/ld+json                         jsonld
   AddType application/javascript                      js
   AddType video/mp4                                   f4v f4p m4v mp4
@@ -43,7 +43,7 @@ ErrorDocument 404 /404.html
   AddType application/vnd.ms-fontobject               eot
   AddType application/x-font-ttf                      ttc ttf
   AddType font/opentype                               otf
-	AddType image/svg+xml                           	  svgz
+  AddType image/svg+xml                           	  svgz
   AddEncoding gzip                                    svgz
   AddType application/x-chrome-extension              crx
   AddType application/x-opera-extension               oex
@@ -51,7 +51,7 @@ ErrorDocument 404 /404.html
   AddType image/webp                                  webp
   AddType image/x-icon                                cur
   AddType text/x-component                            htc
-	AddCharset utf-8 .atom .css .js .json .jsonld .rss .xml
+  AddCharset utf-8 .atom .css .js .json .jsonld .rss .xml
 </IfModule>
 
 <IfModule mod_autoindex.c>
