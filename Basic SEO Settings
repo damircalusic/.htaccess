@@ -30,7 +30,7 @@ Options -MultiViews
 ErrorDocument 404 /404.html
 
 <IfModule mod_mime.c>
-	AddType audio/mp4                                   m4a f4a f4b
+  AddType audio/mp4                                   m4a f4a f4b
   AddType audio/ogg                                   oga ogg opus
   AddType application/json                            json map
   AddType application/ld+json                         jsonld
@@ -43,7 +43,7 @@ ErrorDocument 404 /404.html
   AddType application/vnd.ms-fontobject               eot
   AddType application/x-font-ttf                      ttc ttf
   AddType font/opentype                               otf
-  AddType image/svg+xml                           	  svgz
+  AddType image/svg+xml				      svgz
   AddEncoding gzip                                    svgz
   AddType application/x-chrome-extension              crx
   AddType application/x-opera-extension               oex
