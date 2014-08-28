@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks
+  Options +SymLinksIfOwnerMatch
+  RewriteEngine On
+  RewriteBase /	
+	RewriteCond %{SERVER_PORT}s ^(443(s)|[0-9]+s)$
+	RewriteRule ^(.+)$ - [env=askapache:%2]
+	RewriteCond %{HTTP_HOST} !^www.(.+)$ [NC]
+	RewriteRule ^(.*)$ http%{ENV:askapache}://www.%{HTTP_HOST}/$1 [L,R=301]
+	RewriteCond %{HTTPS} !=on
+	RewriteCond %{HTTP_HOST} !^www\.+$ [NC]
+	RewriteCond %{SERVER_ADDR} !=127.0.0.1
+	RewriteCond %{SERVER_ADDR} !=::1
+	RewriteCond %{SERVER_PORT} !^443
+	RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+	RewriteCond %{SCRIPT_FILENAME} -d [OR]
+	RewriteCond %{SCRIPT_FILENAME} -f
+	RewriteRule "(^|/)\." - [F]
+	RewriteRule ^index\.(php)$ https://%{HTTP_HOST} [R=301,L]
+</IfModule>
