@@ -9,9 +9,9 @@
         Header set Access-Control-Allow-Origin "*"
     </FilesMatch>
     
-	<FilesMatch "\.(atom|css|eot|gif|cur|f4[abpv]|htc|ico|jpe?g|js|json(ld)?|m4[av]|mp4|og[agv]|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|web[mp]|woff|xml)$">
+    <FilesMatch "\.(atom|css|eot|gif|cur|f4[abpv]|htc|ico|jpe?g|js|json(ld)?|m4[av]|mp4|og[agv]|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|web[mp]|woff|xml)$">
         Header unset X-UA-Compatible
-		Header unset X-Frame-Options
+	Header unset X-Frame-Options
     </FilesMatch>
 </IfModule>
 
