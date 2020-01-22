@@ -184,66 +184,6 @@ RewriteCond %{HTTP_REFERER} "^https?://(?:[^/]+\.)?savetubevideo\.com" [NC]
 RewriteRule ^.* - [F,L]
 # End HackRepair.com Blacklist, http://pastebin.com/u/hackrepair
 
-# Protect System Files
-<files .htaccess>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-<files readme.html>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-<files readme.txt>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-<files install.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-<files wp-config.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-
-# Disable XML-RPC - Security > Settings > WordPress Tweaks > XML-RPC
-<files xmlrpc.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
-</files>
-
-# Disable Directory Browsing
-Options -Indexes
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
@@ -295,28 +235,53 @@ Options -Indexes
 
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
-	RewriteRule ^index\.php$ - [L]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . /index.php [L]
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
 </IfModule>
-
 # END WordPress
 
 ##############################
 ### SEO SETTINGS
 ### @author Damir Calusic 
 ### @email damir@webkreativ.se
-### @version 1.1
+### @version 1.2
 # START settings
 ##############################
+# Rewrite system folders and files and protect them against bots/spam
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Protect System Files
+	RewriteRule ^wp-admin/includes/ - [F]
+	RewriteRule !^wp-includes/ - [S=3]
+	RewriteCond %{SCRIPT_FILENAME} !^(.*)wp-includes/ms-files.php
+	RewriteRule ^wp-includes/[^/]+\.php$ - [F]
+	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F]
+	RewriteRule ^wp-includes/theme-compat/ - [F]
+
+	# Disable PHP in Uploads
+	RewriteRule ^wp\-content/uploads/.*\.(?:php[1-6]?|pht|phtml?)$ - [NC,F]
+
+	# Reduce Comment Spam
+	RewriteCond %{REQUEST_METHOD} POST
+	RewriteCond %{REQUEST_URI} /wp-comments-post\.php$
+	RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+	RewriteCond %{HTTP_REFERER} !^https?://(([^/]+\.)?{DOMAIN}\.se|jetpack\.wordpress\.com/jetpack-comment)(/|$) [NC] #### change {DOMAIN} to domain name without www.
+	RewriteRule ^.* - [F]
+</IfModule>
+
 <IfModule mod_autoindex.c>
+    # Disable Directory Browsing
     Options -Indexes
+    
     #Options -MultiViews
 </IfModule>
 
+# Set correct headers for images
 <IfModule mod_setenvif.c>
     <IfModule mod_headers.c>
         <FilesMatch "\.(gif|ico|jpe?g|png|svgz?)$">
@@ -326,6 +291,7 @@ Options -Indexes
     </IfModule>
 </IfModule>
 
+# Set correct headers for files
 <IfModule mod_headers.c>
 	Header set Strict-Transport-Security "max-age=31536000;"
 	Header set Content-Security-Policy "default-src https: data: 'unsafe-inline' 'unsafe-eval'"
@@ -334,16 +300,17 @@ Options -Indexes
 	Header set X-Content-Type-Options "nosniff"
 	Header unset ETag
 	
-    <FilesMatch "\.(eot|otf|tt[cf]|woff)$">
+    <FilesMatch "\.(eot|otf|tt[cf]|woff|woff2)$">
         Header set Access-Control-Allow-Origin "*"
     </FilesMatch>
     
-    <FilesMatch "\.(atom|css|eot|gif|cur|f4[abpv]|htc|ico|jpe?g|js|json(ld)?|m4[av]|mp4|og[agv]|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|web[mp]|woff|xml)$">
+    <FilesMatch "\.(atom|css|eot|gif|cur|f4[abpv]|htc|ico|jpe?g|js|json(ld)?|m4[av]|mp4|og[agv]|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|web[mp]|woff|woff2|xml)$">
         Header unset X-UA-Compatible
 	    Header unset X-Frame-Options
     </FilesMatch>
 </IfModule>
 
+# Protect System Files
 <files .htaccess>
 	<IfModule mod_authz_core.c>
 		Require all denied
@@ -399,6 +366,7 @@ Options -Indexes
 	</IfModule>
 </files>
 
+# Set correct mime type for all sorts of files
 <IfModule mod_mime.c>
     AddType audio/mp4                                   m4a f4a f4b
     AddType audio/ogg                                   oga ogg opus
@@ -425,6 +393,7 @@ Options -Indexes
     AddCharset utf-8 .atom .css .js .json .jsonld .rss .xml
 </IfModule>
 
+# Make sure that files are ready for being GZIPPED
 <IfModule mod_deflate.c>
 	<IfModule mod_setenvif.c>
         <IfModule mod_headers.c>
@@ -454,6 +423,7 @@ Options -Indexes
     </IfModule>
 </IfModule>
 
+# Set correct expires date for files
 <IfModule mod_expires.c>
     ExpiresActive on
     ExpiresDefault                                      "access plus 1 month"
@@ -478,12 +448,14 @@ Options -Indexes
     ExpiresByType application/atom+xml                  "access plus 1 hour"
     ExpiresByType application/rss+xml                   "access plus 1 hour"
     ExpiresByType application/font-woff                 "access plus 1 month"
+    ExpiresByType application/X-font-woff2              "access plus 1 month"
     ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
     ExpiresByType application/x-font-ttf                "access plus 1 month"
     ExpiresByType font/opentype                         "access plus 1 month"
     ExpiresByType image/svg+xml                         "access plus 1 month"
 </IfModule>
 
+# GZIP all neccessary files
 <ifModule mod_gzip.c>
     mod_gzip_on Yes
     mod_gzip_dechunk Yes
@@ -498,6 +470,6 @@ Options -Indexes
 FileETag None
 ##############################
 ### SEO Settings
-### @version 1.1
+### @version 1.2
 # END settings
 ##############################
