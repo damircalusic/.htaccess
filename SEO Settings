@@ -370,7 +370,7 @@ RewriteRule ^.* - [F,L]
 <IfModule mod_mime.c>
     AddType audio/mp4                                   m4a f4a f4b
     AddType audio/ogg                                   oga ogg opus
-    AddType application/json                            json map
+    AddType application/json                            json map webmanifest
     AddType application/ld+json                         jsonld
     AddType application/javascript                      js
     AddType video/mp4                                   f4v f4p m4v mp4
