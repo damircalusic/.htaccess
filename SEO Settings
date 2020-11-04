@@ -246,38 +246,37 @@ RewriteRule ^.* - [F,L]
 
 ##############################
 ### SEO SETTINGS
-### @author Damir Calusic 
+### @author Damir Calusic
 ### @email damir@webkreativ.se
-### @version 1.2
+### @version 1.3
 # START settings
 ##############################
 # Rewrite system folders and files and protect them against bots/spam
 <IfModule mod_rewrite.c>
-	RewriteEngine On
+    RewriteEngine On
 
-	# Protect System Files
-	RewriteRule ^wp-admin/includes/ - [F]
-	RewriteRule !^wp-includes/ - [S=3]
-	RewriteCond %{SCRIPT_FILENAME} !^(.*)wp-includes/ms-files.php
-	RewriteRule ^wp-includes/[^/]+\.php$ - [F]
-	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F]
-	RewriteRule ^wp-includes/theme-compat/ - [F]
+    # Protect System Files
+    RewriteRule ^wp-admin/includes/ - [F]
+    RewriteRule !^wp-includes/ - [S=3]
+    RewriteCond %{SCRIPT_FILENAME} !^(.*)wp-includes/ms-files.php
+    RewriteRule ^wp-includes/[^/]+\.php$ - [F]
+    RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F]
+    RewriteRule ^wp-includes/theme-compat/ - [F]
 
-	# Disable PHP in Uploads
-	RewriteRule ^wp\-content/uploads/.*\.(?:php[1-6]?|pht|phtml?)$ - [NC,F]
+    # Disable PHP in Uploads
+    RewriteRule ^wp\-content/uploads/.*\.(?:php[1-6]?|pht|phtml?)$ - [NC,F]
 
-	# Reduce Comment Spam
-	RewriteCond %{REQUEST_METHOD} POST
-	RewriteCond %{REQUEST_URI} /wp-comments-post\.php$
-	RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
-	RewriteCond %{HTTP_REFERER} !^https?://(([^/]+\.)?{DOMAIN}\.se|jetpack\.wordpress\.com/jetpack-comment)(/|$) [NC] #### change {DOMAIN} to domain name without www.
-	RewriteRule ^.* - [F]
+    # Reduce Comment Spam
+    RewriteCond %{REQUEST_METHOD} POST
+    RewriteCond %{REQUEST_URI} /wp-comments-post\.php$
+    RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+    RewriteCond %{HTTP_REFERER} !^https?://(([^/]+\.)?{DOMAIN}\.se|jetpack\.wordpress\.com/jetpack-comment)(/|$) [NC] #### change {DOMAIN} to domain name without www.
+    RewriteRule ^.* - [F]
 </IfModule>
 
+# Disable Directory Browsing
 <IfModule mod_autoindex.c>
-    # Disable Directory Browsing
     Options -Indexes
-    
     #Options -MultiViews
 </IfModule>
 
@@ -293,78 +292,87 @@ RewriteRule ^.* - [F,L]
 
 # Set correct headers for files
 <IfModule mod_headers.c>
-	Header set Strict-Transport-Security "max-age=31536000;"
-	Header set Content-Security-Policy "default-src https: data: 'unsafe-inline' 'unsafe-eval'"
-	Header set X-UA-Compatible "IE=edge"
-	Header set X-Frame-Options "DENY"
-	Header set X-Content-Type-Options "nosniff"
-	Header unset ETag
-	
+    Header set Strict-Transport-Security "max-age=31536000;"
+    Header set Content-Security-Policy "default-src https: data: 'unsafe-inline' 'unsafe-eval'"
+    Header set X-UA-Compatible "IE=edge"
+    #Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header unset ETag
+
     <FilesMatch "\.(eot|otf|tt[cf]|woff|woff2)$">
         Header set Access-Control-Allow-Origin "*"
     </FilesMatch>
-    
+
     <FilesMatch "\.(atom|css|eot|gif|cur|f4[abpv]|htc|ico|jpe?g|js|json(ld)?|m4[av]|mp4|og[agv]|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|tt[cf]|web[mp]|woff|woff2|xml)$">
         Header unset X-UA-Compatible
-	    Header unset X-Frame-Options
+        Header unset X-Frame-Options
     </FilesMatch>
 </IfModule>
 
 # Protect System Files
 <files .htaccess>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
 <files readme.html>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
 <files readme.txt>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
 <files install.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
 <files wp-config.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
 <files xmlrpc.php>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order allow,deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </files>
+
+# Prevent information disclosure
+<FilesMatch "\.(md|exe|sh|bak|inc|pot|po|mo|log|sql)$">
+    Require all denied
+</FilesMatch>
+<Files robots.txt>
+    Require all granted
+</Files>
 
 # Set correct mime type for all sorts of files
 <IfModule mod_mime.c>
@@ -395,31 +403,31 @@ RewriteRule ^.* - [F,L]
 
 # Make sure that files are ready for being GZIPPED
 <IfModule mod_deflate.c>
-	<IfModule mod_setenvif.c>
+    <IfModule mod_setenvif.c>
         <IfModule mod_headers.c>
             SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
             RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
         </IfModule>
     </IfModule>
-	<IfModule mod_filter.c>
+    <IfModule mod_filter.c>
         AddOutputFilterByType DEFLATE application/atom+xml \
-                                      application/javascript \
-                                      application/json \
-                                      application/ld+json \
-                                      application/rss+xml \
-                                      application/vnd.ms-fontobject \
-                                      application/x-font-ttf \
-                                      application/x-web-app-manifest+json \
-                                      application/xhtml+xml \
-                                      application/xml \
-                                      font/opentype \
-                                      image/svg+xml \
-                                      image/x-icon \
-                                      text/css \
-                                      text/html \
-                                      text/plain \
-                                      text/x-component \
-                                      text/xml
+        application/javascript \
+        application/json \
+        application/ld+json \
+        application/rss+xml \
+        application/vnd.ms-fontobject \
+        application/x-font-ttf \
+        application/x-web-app-manifest+json \
+        application/xhtml+xml \
+        application/xml \
+        font/opentype \
+        image/svg+xml \
+        image/x-icon \
+        text/css \
+        text/html \
+        text/plain \
+        text/x-component \
+        text/xml
     </IfModule>
 </IfModule>
 
@@ -470,6 +478,6 @@ RewriteRule ^.* - [F,L]
 FileETag None
 ##############################
 ### SEO Settings
-### @version 1.2
+### @version 1.3
 # END settings
 ##############################
